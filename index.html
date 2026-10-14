@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trismegisto · Administração de Bens</title>
+<meta name="description" content="Trismegisto Participações e Administradora de Bens. Locação de salas comerciais, apartamentos e terreno em Vila Velha, Vitória e Cariacica (ES).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: foto da empresa ocupando o topo, nome e um único botão. Sem distrações: a página existe para levar ao cadastro. */
+:root{
+  --bg:#f3f5f4; --paper:#ffffff; --ink:#17221e; --muted:#5b6964; --line:#d5ddda;
+  --accent:#1f5c4f; --accent-ink:#ffffff;
+  --display:"Literata",Georgia,serif; --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{--bg:#111816;--paper:#18211e;--ink:#e4ece9;--muted:#9aaba5;--line:#2c3a35;--accent:#6fc2ad;--accent-ink:#0f1a17;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);min-height:100vh;display:flex;flex-direction:column}
+.photo{width:100%;aspect-ratio:16/7;max-height:62vh;object-fit:cover;display:block;background:var(--accent)}
+.photo-fallback{width:100%;height:26vh;background:linear-gradient(135deg,var(--accent),#2f7a69)}
+main{flex:1;max-width:680px;width:100%;margin:0 auto;padding-inline:16px;padding-block:32px 48px;display:flex;flex-direction:column;gap:18px}
+.eyebrow{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(1.9rem,6vw,2.8rem);line-height:1.15;margin:0;text-wrap:balance}
+p.lead{margin:0;color:var(--muted);max-width:52ch}
+a.cta{align-self:flex-start;display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600;font-size:1.1rem;padding:16px 34px;border-radius:12px}
+a.cta:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+a.cta:hover{filter:brightness(1.08)}
+.places{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.places li{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.88rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:16px;text-align:center;font-size:.82rem;color:var(--muted)}
+@media (max-width:480px){a.cta{align-self:stretch;text-align:center}}
+</style>
+</head>
+<body>
+<img class="photo" src="foto.jpg" alt="Fachada da Trismegisto" onerror="this.outerHTML='&lt;div class=&quot;photo-fallback&quot;&gt;&lt;/div&gt;'">
+<main>
+  <p class="eyebrow">Administração de bens</p>
+  <h1>Trismegisto Participações e Administradora de Bens</h1>
+  <p class="lead">Salas comerciais, apartamentos e terreno para locação no Espírito Santo. Para alugar um dos nossos imóveis, faça seu cadastro.</p>
+  <ul class="places"><li>Vila Velha</li><li>Vitória</li><li>Cariacica</li></ul>
+  <a class="cta" href="cadastro.html">Entre aqui</a>
+</main>
+<footer>Trismegisto Participações e Administradora de Bens Ltda · CNPJ 21.237.867/0001-35 · Vila Velha/ES · trismegistobens@gmail.com</footer>
+</body>
+</html>
