@@ -60,6 +60,7 @@ button.send:disabled{opacity:.6;cursor:default}
 .done h2{font-family:var(--display);margin:0 0 8px}
 .proto{font-size:1.4rem;font-weight:600;letter-spacing:.06em;color:var(--accent)}
 .hp{position:absolute;left:-9999px}
+[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -80,7 +81,7 @@ button.send:disabled{opacity:.6;cursor:default}
   <legend>1. Uso do imóvel</legend>
   <div class="f"><span>Para que vai usar o imóvel? <i>*</i></span>
     <div class="chips"><label><input type="radio" name="uso" value="Moradia" required data-label="Uso do imóvel">Moradia</label><label><input type="radio" name="uso" value="Atividade profissional ou empresa">Atividade profissional ou empresa</label></div></div>
-  <div class="f"><span>O contrato será em nome de: <i>*</i></span>
+  <div class="f" data-if="uso:Atividade profissional ou empresa" data-keep="tipo"><span>O contrato será em nome de: <i>*</i></span>
     <div class="chips"><label><input type="radio" name="tipo" value="Pessoa física" required data-label="Contrato em nome de">Pessoa física</label><label><input type="radio" name="tipo" value="Empresa">Empresa</label></div></div>
   <label class="f"><span>Qual imóvel você quer alugar? <i>*</i></span><input name="imovel" required data-label="Imóvel desejado" placeholder="Ex.: sala 1408 do Golden Business"></label>
   <label class="f" data-if="uso:Moradia"><span>Quem vai morar no imóvel? <i>*</i></span><textarea name="moradores" required data-label="Moradores" placeholder="Nomes ou número de pessoas"></textarea></label>
@@ -99,7 +100,7 @@ button.send:disabled{opacity:.6;cursor:default}
   <div class="f"><span>Data de nascimento <i>*</i></span><div class="date3" data-date="nasc" data-label="Data de nascimento" data-req="1"></div></div>
   <div class="grid">
     <label class="f"><span>Nacionalidade <i>*</i></span><select name="nac" required data-label="Nacionalidade" data-list="nac"></select></label>
-    <label class="f" data-if="nac:Outra"><span>Qual nacionalidade? <i>*</i></span><input name="nac_outra" required data-label="Nacionalidade (outra)"></label>
+    <label class="f" data-if="nac:*"><span>Cidade onde nasceu <i>*</i></span><input name="naturalidade" required data-label="Cidade onde nasceu"></label>
     <label class="f"><span>Estado civil <i>*</i></span><select name="civil" required data-label="Estado civil" data-list="civil"></select></label>
     <label class="f"><span>Profissão <i>*</i></span><select name="prof" required data-label="Profissão" data-list="prof"></select></label>
     <label class="f" data-if="prof:Outra"><span>Qual profissão? <i>*</i></span><input name="prof_outra" required data-label="Profissão (outra)"></label>
@@ -115,7 +116,7 @@ button.send:disabled{opacity:.6;cursor:default}
   </div>
 </fieldset>
 
-<fieldset data-if="tipo:Empresa">
+<fieldset data-if="uso:Atividade profissional ou empresa;tipo:Empresa">
   <legend>2. Dados da empresa</legend>
   <label class="f"><span>Razão social <i>*</i></span><input name="razao" required data-label="Razão social"></label>
   <div class="grid">
@@ -165,7 +166,7 @@ button.send:disabled{opacity:.6;cursor:default}
       <label><input type="radio" name="gar" value="Título de capitalização">Título de capitalização</label>
       <label><input type="radio" name="gar" value="Ainda não sei">Ainda não sei</label>
     </div></div>
-  <p class="hint" data-if="gar:Caução">A caução é de 3 aluguéis, paga por PIX. A forma de pagamento é combinada com a Trismegisto.</p>
+  <p class="hint" data-if="gar:Caução">A caução é de 3 aluguéis, paga por PIX. O prazo do pagamento é combinado com a Trismegisto.</p>
   <div class="grid" data-if="gar:Seguro-fiança|Título de capitalização">
     <label class="f"><span>Empresa (seguradora ou banco)</span><input name="seg_emp" data-label="Seguro/título – empresa"></label>
     <label class="f"><span>Número da apólice ou do título</span><input name="seg_num" data-label="Seguro/título – número"></label>
@@ -184,7 +185,7 @@ button.send:disabled{opacity:.6;cursor:default}
   <div class="f"><span>Data de nascimento <i>*</i></span><div class="date3" data-date="fia_nasc" data-label="Fiador – nascimento" data-req="1"></div></div>
   <div class="grid">
     <label class="f"><span>Nacionalidade <i>*</i></span><select name="fia_nac" required data-label="Fiador – nacionalidade" data-list="nac"></select></label>
-    <label class="f" data-if="fia_nac:Outra"><span>Qual nacionalidade? <i>*</i></span><input name="fia_nac_outra" required data-label="Fiador – nacionalidade (outra)"></label>
+    <label class="f" data-if="fia_nac:*"><span>Cidade onde nasceu <i>*</i></span><input name="fia_naturalidade" required data-label="Fiador – cidade onde nasceu"></label>
     <label class="f"><span>Estado civil <i>*</i></span><select name="fia_civil" required data-label="Fiador – estado civil" data-list="civil"></select></label>
     <label class="f"><span>Profissão <i>*</i></span><select name="fia_prof" required data-label="Fiador – profissão" data-list="prof"></select></label>
     <label class="f" data-if="fia_prof:Outra"><span>Qual profissão? <i>*</i></span><input name="fia_prof_outra" required data-label="Fiador – profissão (outra)"></label>
@@ -203,20 +204,20 @@ button.send:disabled{opacity:.6;cursor:default}
   <legend>7. Documentos</legend>
   <p class="hint">Foto ou PDF, até 10 MB por arquivo.</p>
   <div data-file="doc_rg" data-label="RG ou CNH (frente e verso)" data-if="tipo:Pessoa física" data-req="1"></div>
+  <div data-file="doc_rep" data-label="RG ou CNH (frente e verso) do representante da empresa" data-if="tipo:Empresa" data-req="1"></div>
   <div data-file="doc_cpf" data-label="CPF (se não constar no RG ou CNH)" data-if="tipo:Pessoa física"></div>
-  <div data-file="doc_res" data-label="Comprovante de residência" data-if="tipo:Pessoa física" data-req="1"></div>
-  <div data-file="doc_ir" data-label="Última declaração de imposto de renda" data-if="tipo:Pessoa física"></div>
-  <div data-file="doc_prof" data-label="Comprovante profissional (registro no conselho: CRO, CRM, CRP, OAB…)" data-if="tipo:Pessoa física;uso:Atividade profissional ou empresa"></div>
   <div data-file="doc_cnpj" data-label="Cartão CNPJ" data-if="tipo:Empresa" data-req="1"></div>
-  <div data-file="doc_contrato" data-label="Contrato social e última alteração" data-if="tipo:Empresa"></div>
-  <div data-file="doc_rep" data-label="RG ou CNH do representante legal" data-if="tipo:Empresa" data-req="1"></div>
-  <div data-file="doc_endpj" data-label="Comprovante de endereço da empresa" data-if="tipo:Empresa"></div>
-  <div data-file="doc_irpj" data-label="Última declaração de imposto de renda (empresa ou representante)" data-if="tipo:Empresa"></div>
-  <div data-file="doc_conj" data-label="RG ou CNH do cônjuge" data-if="tipo:Pessoa física;civil:Casado(a)|União estável"></div>
-  <div data-file="doc_fia_rg" data-label="Fiador – RG ou CNH" data-if="gar:Fiador" data-req="1"></div>
-  <div data-file="doc_fia_res" data-label="Fiador – comprovante de residência" data-if="gar:Fiador" data-req="1"></div>
-  <div data-file="doc_fia_ir" data-label="Fiador – última declaração de imposto de renda" data-if="gar:Fiador"></div>
-  <div data-file="doc_apolice" data-label="Apólice do seguro-fiança ou título" data-if="gar:Seguro-fiança|Título de capitalização"></div>
+  <div data-file="doc_res" data-label="Comprovante de residência" data-if="tipo:Pessoa física" data-req="1"></div>
+  <div data-file="doc_res_rep" data-label="Comprovante de residência do representante da empresa" data-if="tipo:Empresa" data-req="1"></div>
+  <div data-file="doc_ir" data-label="Última declaração de imposto de renda"></div>
+  <div data-file="doc_prof" data-label="Comprovante profissional (registro no conselho: CRO, CRM, CRP, OAB…)" data-if="tipo:Pessoa física;uso:Atividade profissional ou empresa"></div>
+  <div data-file="doc_contrato" data-label="Cópia do último contrato social" data-if="tipo:Empresa"></div>
+  <div data-file="doc_conj" data-label="RG ou CNH do cônjuge (frente e verso)" data-if="tipo:Pessoa física;civil:Casado(a)|União estável"></div>
+  <div data-file="doc_fia_rg" data-label="RG ou CNH do fiador (frente e verso)" data-if="gar:Fiador" data-req="1"></div>
+  <div data-file="doc_fia_res" data-label="Comprovante de residência do fiador" data-if="gar:Fiador" data-req="1"></div>
+  <div data-file="doc_fia_ir" data-label="Última declaração de imposto de renda do fiador" data-if="gar:Fiador"></div>
+  <div data-file="doc_fia_conj" data-label="RG ou CNH do cônjuge do fiador (frente e verso)" data-if="gar:Fiador;fia_civil:Casado(a)|União estável"></div>
+  <div data-file="doc_apolice" data-label="Apólice do seguro-fiança ou título de capitalização" data-if="gar:Seguro-fiança|Título de capitalização"></div>
 </fieldset>
 
 <fieldset data-if="tipo:Pessoa física|Empresa">
@@ -257,7 +258,7 @@ document.querySelectorAll("select[data-list]").forEach(s => {
   if (k === "prof") items.sort((a,b)=>a.localeCompare(b,"pt-BR"));
   s.append(new Option("Escolha…", ""));
   items.forEach(v => s.append(new Option(v, v)));
-  if (k === "nac" || k === "prof") s.append(new Option(k === "nac" ? "Outra" : "Outra", "Outra"));
+  if (k === "prof") s.append(new Option("Outra", "Outra"));
 });
 
 /* Datas: ano, mês, dia */
@@ -287,16 +288,11 @@ document.querySelectorAll("[data-address]").forEach(box => {
     <label><input type="radio" name="${p}_tipo" value="Apartamento">Apartamento</label>
     <label><input type="radio" name="${p}_tipo" value="Imóvel comercial">Imóvel comercial</label>
     <label><input type="radio" name="${p}_tipo" value="Outro">Outro</label></div></div>
-  <div class="grid" data-if="${p}_tipo:Apartamento">
-    <label class="f"><span>Nome do edifício <i>*</i></span><input name="${p}_ed" required data-label="${L} – edifício"></label>
-    <label class="f"><span>Torre / bloco</span><input name="${p}_torre" data-label="${L} – torre"></label>
-    <label class="f"><span>Nº do apartamento <i>*</i></span><input name="${p}_apto" required data-label="${L} – apartamento"></label>
-  </div>
-  <div class="grid" data-if="${p}_tipo:Imóvel comercial">
-    <label class="f"><span>Edifício / centro empresarial</span><input name="${p}_edc" data-label="${L} – edifício comercial"></label>
-    <label class="f"><span>Bloco</span><input name="${p}_bloco" data-label="${L} – bloco"></label>
+  <div class="grid" data-if="${p}_tipo:Apartamento|Imóvel comercial">
+    <label class="f"><span>Edifício</span><input name="${p}_ed" data-label="${L} – edifício"></label>
+    <label class="f"><span>Bloco / Torre</span><input name="${p}_bloco" data-label="${L} – bloco / torre"></label>
     <label class="f"><span>Andar</span><input name="${p}_andar" data-label="${L} – andar"></label>
-    <label class="f"><span>Sala / loja <i>*</i></span><input name="${p}_sala" required data-label="${L} – sala"></label>
+    <label class="f"><span>Sala / Loja / Apto <i>*</i></span><input name="${p}_sala" required data-label="${L} – sala / loja / apto"></label>
   </div>
   <label class="f" data-if="${p}_tipo:Outro"><span>Descreva <i>*</i></span><input name="${p}_outro" required data-label="${L} – complemento"></label>
   <label class="f"><span>Ponto de referência</span><input name="${p}_ref" data-label="${L} – referência"></label>`;
@@ -347,10 +343,11 @@ async function buscaCep(input){
 
 /* Campos que aparecem conforme as escolhas */
 function valor(n){ const els = form.elements[n]; if (!els) return ""; if (els instanceof RadioNodeList) return els.value || ""; return els.value || ""; }
-function cond(expr){ return expr.split(";").every(part => { const [n, vals] = part.split(":"); return vals.split("|").includes(valor(n.trim())); }); }
+function cond(expr){ return expr.split(";").every(part => { const [n, vals] = part.split(":"); const v = valor(n.trim()); return vals === "*" ? v !== "" : vals.split("|").includes(v); }); }
 function aplicar(){
+  if (valor("uso") === "Moradia") form.querySelector('input[name="tipo"][value="Pessoa física"]').checked = true;
   document.querySelectorAll("[data-if]").forEach(x => { x.hidden = !cond(x.dataset.if); });
-  form.querySelectorAll("input,select,textarea").forEach(i => { if (i.name === "hp") return; i.disabled = !!i.closest("[hidden]"); });
+  form.querySelectorAll("input,select,textarea").forEach(i => { if (i.name === "hp") return; i.disabled = !!i.closest("[hidden]") && !i.closest("[data-keep]"); });
   const pj = valor("tipo") === "Empresa";
   document.getElementById("endTitle").textContent = pj ? "4. Endereço da empresa" : "4. Endereço atual";
 }
