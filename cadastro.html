@@ -75,7 +75,7 @@ button.send:disabled{opacity:.6;cursor:default}
 <p class="lgpd">A Trismegisto usará estes dados e documentos somente para cadastro, análise de crédito e idoneidade e elaboração do contrato de locação. A declaração de imposto de renda serve apenas para análise de crédito. Só a administração da empresa tem acesso. Se a locação não for fechada, os dados serão apagados em até 6 meses. Para corrigir ou apagar seus dados, escreva para trismegistobens@gmail.com.</p>
 
 <form id="f" novalidate>
-<input class="hp" type="text" name="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
 
 <fieldset>
   <legend>1. Uso do imóvel</legend>
@@ -374,6 +374,7 @@ function coletar(){
 const lerBase64 = f => new Promise((ok, erro) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = erro; r.readAsDataURL(f); });
 async function enviar(obj){ const r = await fetch(ENDPOINT, { method: "POST", body: JSON.stringify(obj) }); const j = await r.json(); if (!j.ok) throw new Error(j.erro || "Falha no envio."); return j; }
 
+const ABERTO_EM = Date.now(); /* anti-robô: envio em menos de 4 s após abrir = robô */
 const status = document.getElementById("status"), btn = document.getElementById("send");
 form.addEventListener("submit", async e => {
   e.preventDefault(); aplicar();
@@ -382,7 +383,7 @@ form.addEventListener("submit", async e => {
   btn.disabled = true; status.className = "status"; status.textContent = "Enviando seus dados…";
   try {
     const nome = valor("tipo") === "Empresa" ? valor("razao") : valor("nome");
-    const r = await enviar({ acao: "cadastro", hp: valor("hp"), nome, dados: coletar() });
+    const r = await enviar({ acao: "cadastro", hp: (Date.now() - ABERTO_EM < 4000) ? "1" : "", nome, dados: coletar() });
     const arquivos = [...form.querySelectorAll('input[type="file"]')].filter(i => !i.disabled && i.files[0]);
     for (let k = 0; k < arquivos.length; k++) {
       const i = arquivos[k], f = i.files[0];
