@@ -357,7 +357,7 @@ aplicar();
 /* Coleta dos dados */
 function coletar(){
   const out = [], vistos = new Set();
-  form.querySelectorAll("[data-label]").forEach(i => {
+  form.querySelectorAll("input[data-label],select[data-label],textarea[data-label]").forEach(i => {
     if (i.disabled || i.dataset.date !== undefined) return;
     if (i.type === "radio") { if (vistos.has(i.name)) return; vistos.add(i.name); out.push({ label: i.dataset.label, v: valor(i.name) }); return; }
     if (i.type === "checkbox") { out.push({ label: i.dataset.label, v: i.checked ? "Sim" : "Não" }); return; }
